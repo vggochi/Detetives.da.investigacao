@@ -1,0 +1,772 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#E9EEEB">
+  <meta name="description" content="Detetives da Informação — investigue pistas, verifique fontes e descubra se uma informação é verdadeira, falsa ou inconclusiva.">
+
+  <title>Detetives da Informação</title>
+  <link rel="icon" type="image/png" href="./logo.png">
+  <link rel="stylesheet" href="./style.css?v=20261030-9">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    .brand-logo {
+      display: block;
+      width: 48px;
+      height: 48px;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .case-gallery {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 12px;
+      margin: 0 0 24px;
+    }
+
+    .case-cover {
+      position: relative;
+      display: flex;
+      min-height: 125px;
+      flex-direction: column;
+      justify-content: flex-end;
+      gap: 6px;
+      padding: 14px;
+      overflow: hidden;
+      text-align: left;
+      color: var(--ink);
+      background: var(--surface);
+      border: 1px solid var(--line-strong);
+      border-radius: 3px;
+      cursor: pointer;
+      font: inherit;
+    }
+
+    .case-cover::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(0deg, var(--surface) 8%, transparent 100%);
+      opacity: .96;
+    }
+
+    .case-cover img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: .35;
+      transition: transform .25s ease, opacity .25s ease;
+    }
+
+    .case-cover:hover img {
+      transform: scale(1.06);
+      opacity: .5;
+    }
+
+    .case-cover b,
+    .case-cover span {
+      position: relative;
+      z-index: 1;
+    }
+
+    .case-cover b {
+      font: 800 1.25rem/1 var(--font-display);
+      text-transform: uppercase;
+    }
+
+    .case-cover span {
+      font: 500 .68rem/1.3 var(--font-mono);
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    .case-cover.is-active {
+      outline: 3px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .team-footer {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      margin-top: 28px;
+      padding: 24px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+    }
+
+    .team-footer img {
+      width: 64px;
+      height: 64px;
+      flex-shrink: 0;
+      object-fit: contain;
+    }
+
+    .team-info {
+      display: grid;
+      gap: 3px;
+    }
+
+    .team-info strong {
+      font: 800 1.8rem/1 var(--font-display);
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    .team-info span {
+      font: 500 .75rem/1.5 var(--font-mono);
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+    }
+
+    @media (max-width: 900px) {
+      .case-gallery {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 480px) {
+      .brand-logo {
+        width: 40px;
+        height: 40px;
+      }
+
+      .team-footer {
+        justify-content: flex-start;
+        padding: 18px;
+      }
+
+      .team-footer img {
+        width: 52px;
+        height: 52px;
+      }
+
+      .team-info strong {
+        font-size: 1.5rem;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .case-cover img {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <section class="squad-gate" id="squad-gate" aria-labelledby="squad-gate-title">
+    <div class="squad-gate-inner">
+      <a class="brand squad-gate-brand" href="#" aria-label="Detetives da Informação">
+        <img class="brand-logo" src="./logo.png" alt="">
+        <span>Detetives da Informação</span>
+      </a>
+
+      <div class="squad-gate-heading">
+        <span class="label">Central de equipes</span>
+        <h1 id="squad-gate-title">Entre para <span>investigar.</span></h1>
+        <p>Crie seu squad ou use um código de convite para continuar. Sem cadastro, e-mail ou senha.</p>
+      </div>
+
+      <div class="squad-gate-grid">
+        <form class="squad-panel" id="squad-create-form">
+          <span class="squad-number">01 / NOVA EQUIPE</span>
+          <h2>Criar squad</h2>
+          <p>Monte sua equipe e compartilhe o código com os participantes.</p>
+
+          <div class="field">
+            <label for="create-squad-name">Nome do squad</label>
+            <input id="create-squad-name" type="text" maxlength="50" placeholder="Ex.: ARMAGEDOM" required>
+          </div>
+          <div class="field">
+            <label for="create-squad-class">Turma</label>
+            <input id="create-squad-class" type="text" maxlength="30" placeholder="Ex.: 2BDEV" required>
+          </div>
+          <div class="field">
+            <label for="create-squad-members">Participantes</label>
+            <textarea id="create-squad-members" rows="3" placeholder="Digite um nome por linha ou separe por vírgula" required></textarea>
+            <span class="hint">O primeiro nome será usado como participante nesta sessão.</span>
+          </div>
+          <div class="field">
+            <label for="create-squad-description">Descrição (opcional)</label>
+            <input id="create-squad-description" type="text" maxlength="240" placeholder="Objetivo da equipe">
+          </div>
+          <button class="btn primary" type="submit">Criar squad e entrar</button>
+        </form>
+
+        <form class="squad-panel squad-panel-join" id="squad-join-form">
+          <span class="squad-number">02 / JÁ TEM CONVITE?</span>
+          <h2>Entrar em um squad</h2>
+          <p>Informe o código recebido e seu nome para registrar sua participação.</p>
+
+          <div class="squad-emblem" aria-hidden="true">↗</div>
+          <div class="field">
+            <label for="join-squad-code">Código de convite</label>
+            <input id="join-squad-code" type="text" maxlength="8" placeholder="Ex.: D771C790" autocomplete="off" required>
+          </div>
+          <div class="field">
+            <label for="join-squad-member">Seu nome</label>
+            <input id="join-squad-member" type="text" maxlength="50" placeholder="Nome do participante" required>
+          </div>
+          <button class="btn primary" type="submit">Entrar no squad</button>
+          <div class="existing-squad-note">
+            <strong>ARMAGEDOM · 2BDEV</strong>
+            <span>Convite disponível para a equipe existente.</span>
+            <code>D771C790</code>
+          </div>
+        </form>
+      </div>
+
+      <p class="squad-gate-status" id="squad-gate-status" role="status" aria-live="polite"></p>
+      <p class="squad-gate-foot">ACESSO POR CÓDIGO • SEM CONTAS INDIVIDUAIS • PROGRESSO SALVO NO SUPABASE</p>
+    </div>
+  </section>
+
+  <a class="skip" href="#conteudo">Pular para o conteúdo</a>
+
+  <header class="top">
+    <div class="wrap bar">
+      <a class="brand" href="#inicio" aria-label="Detetives da Informação — início">
+        <img class="brand-logo" src="./logo.png" alt="">
+        <span>Detetives da Informação</span>
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="#projeto">Projeto</a>
+        <a href="#como-funciona">Como funciona</a>
+        <a href="#recursos">Recursos</a>
+        <a href="#casos">Casos</a>
+        <a href="#ranking">Ranking</a>
+      </nav>
+
+      <div class="squad-session" id="squad-session" hidden>
+        <div class="session-identity">
+          <strong id="session-squad-name">Squad</strong>
+          <small id="session-participant">Participante</small>
+        </div>
+        <div class="session-details">
+          <span class="session-code">CONVITE <b id="session-invite-code">--------</b></span>
+          <span class="session-points">PONTUAÇÃO <b id="session-points">0 pts</b></span>
+        </div>
+        <div class="session-actions">
+          <button class="btn sm" id="copy-invite-code" type="button">Copiar convite</button>
+          <button class="btn sm" id="leave-squad" type="button">Sair do squad</button>
+        </div>
+      </div>
+      <a class="btn sm primary" href="#casos">Investigar</a>
+    </div>
+  </header>
+
+  <main id="conteudo">
+    <section class="hero" id="inicio">
+      <div class="wrap hero-grid">
+        <div class="hero-copy">
+          <span class="label">Central de investigação digital</span>
+
+          <h1>
+            Detetives
+            <span>da <span class="red">Informação</span></span>
+          </h1>
+
+          <p class="lead">
+            Antes de acreditar, <strong>investigue.</strong>
+            Analise pistas, confira fontes e descubra o que existe por trás de cada informação.
+          </p>
+
+          <div class="cta">
+            <a class="btn primary" href="#casos">Começar investigação ↗</a>
+            <a class="btn" href="#como-funciona">Como funciona</a>
+          </div>
+
+          <ul class="chips" aria-label="Características do projeto">
+            <li>Pensamento crítico</li>
+            <li>Checagem de fatos</li>
+            <li>Cidadania digital</li>
+          </ul>
+        </div>
+
+        <div>
+          <svg class="board" viewBox="0 0 520 420" role="img" aria-label="Mural de investigação com documentos conectados por fios vermelhos">
+            <rect class="sv-board" width="520" height="420" rx="6"/>
+            <g class="sv-dot">
+              <circle cx="20" cy="20" r="1.5"/><circle cx="50" cy="20" r="1.5"/>
+              <circle cx="80" cy="20" r="1.5"/><circle cx="110" cy="20" r="1.5"/>
+              <circle cx="140" cy="20" r="1.5"/><circle cx="170" cy="20" r="1.5"/>
+              <circle cx="200" cy="20" r="1.5"/><circle cx="230" cy="20" r="1.5"/>
+              <circle cx="260" cy="20" r="1.5"/><circle cx="290" cy="20" r="1.5"/>
+              <circle cx="320" cy="20" r="1.5"/><circle cx="350" cy="20" r="1.5"/>
+              <circle cx="380" cy="20" r="1.5"/><circle cx="410" cy="20" r="1.5"/>
+              <circle cx="440" cy="20" r="1.5"/><circle cx="470" cy="20" r="1.5"/>
+              <circle cx="500" cy="20" r="1.5"/>
+            </g>
+
+            <rect class="sv-paper" x="28" y="48" width="196" height="134" rx="3"/>
+            <text class="sv-lab" x="44" y="69">ARQUIVO 001</text>
+            <text class="sv-t" x="44" y="94">A informação</text>
+            <text class="sv-t" x="44" y="111">é confiável?</text>
+            <line x1="44" y1="127" x2="202" y2="127" stroke="#C4CFCA"/>
+            <text class="sv-sm" x="44" y="146">ANALISAR A ORIGEM</text>
+            <text class="sv-sm" x="44" y="163">CONFERIR A DATA</text>
+
+            <rect class="sv-sticky" x="300" y="48" width="174" height="88" rx="2"/>
+            <text class="sv-t" x="316" y="74">Pistas</text>
+            <text class="sv-note" x="316" y="95">Fonte original</text>
+            <text class="sv-note" x="316" y="114">Evidências</text>
+
+            <rect class="sv-paper" x="300" y="226" width="174" height="122" rx="3"/>
+            <text class="sv-lab" x="316" y="248">RELATÓRIO</text>
+            <text class="sv-t" x="316" y="272">Veredito final</text>
+            <rect x="316" y="286" width="140" height="22" rx="2" fill="#D9EEE2"/>
+            <text x="326" y="301" font-family="IBM Plex Mono" font-size="10" fill="#1D7448">EVIDÊNCIAS</text>
+            <text class="sv-sm" x="316" y="328">REGISTRAR CONCLUSÃO</text>
+
+            <rect class="sv-paper" x="28" y="242" width="196" height="106" rx="3"/>
+            <text class="sv-lab" x="44" y="264">REGISTRO</text>
+            <text class="sv-t" x="44" y="288">Pensamento</text>
+            <text class="sv-t" x="44" y="305">crítico</text>
+            <text class="sv-sm" x="44" y="329">QUESTIONAR • COMPARAR</text>
+
+            <path class="sv-string" d="M224 108 L260 108 L260 175 L387 175 L387 226"/>
+            <path class="sv-string" d="M126 182 L126 212 L126 242"/>
+            <path class="sv-string" d="M387 136 L387 175"/>
+            <circle class="sv-pin" cx="224" cy="108" r="4"/>
+            <circle class="sv-pin" cx="387" cy="226" r="4"/>
+            <circle class="sv-pin" cx="126" cy="242" r="4"/>
+
+            <text class="sv-cap" x="28" y="388">CASO EM ANDAMENTO</text>
+            <text class="sv-cap" x="492" y="388" text-anchor="end">EVIDÊNCIA &gt; OPINIÃO</text>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec alt" id="projeto">
+      <div class="wrap two">
+        <div>
+          <span class="label">01 / O projeto</span>
+          <h2>Investigar antes de compartilhar.</h2>
+        </div>
+
+        <div class="prose">
+          <p>
+            O <strong>Detetives da Informação</strong> é uma experiência educativa
+            que transforma a checagem de informações em uma investigação.
+            Cada caso apresenta uma afirmação e pistas que precisam ser analisadas.
+          </p>
+
+          <dl class="skills">
+            <div>
+              <dt>Observar</dt>
+              <dd>Identificar sinais de alerta, datas, autoria e contexto.</dd>
+            </div>
+            <div>
+              <dt>Verificar</dt>
+              <dd>Comparar evidências e consultar fontes confiáveis.</dd>
+            </div>
+            <div>
+              <dt>Concluir</dt>
+              <dd>Registrar um veredito com justificativa baseada nas pistas.</dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec" id="como-funciona">
+      <div class="wrap">
+        <div class="sec-head">
+          <span class="label">02 / Método de investigação</span>
+          <h2>Como funciona</h2>
+          <p class="sub">Toda conclusão precisa de evidências. Siga as etapas antes de decidir.</p>
+        </div>
+
+        <ol class="steps">
+          <li>
+            <h3>Receba o caso</h3>
+            <p>Leia a afirmação e entenda o contexto apresentado.</p>
+          </li>
+          <li>
+            <h3>Examine as pistas</h3>
+            <p>Observe autoria, data, origem e possíveis inconsistências.</p>
+          </li>
+          <li>
+            <h3>Compare as fontes</h3>
+            <p>Procure confirmações independentes e evidências verificáveis.</p>
+          </li>
+          <li>
+            <h3>Escolha o veredito</h3>
+            <p>Classifique a afirmação com base nas informações disponíveis.</p>
+          </li>
+          <li>
+            <h3>Registre o relatório</h3>
+            <p>Explique seu raciocínio e confira sua pontuação.</p>
+          </li>
+        </ol>
+
+        <div class="verdicts">
+          <article class="verdict ok">
+            <h3>Verdadeira</h3>
+            <p>As evidências confiáveis sustentam a afirmação.</p>
+          </article>
+          <article class="verdict bad">
+            <h3>Falsa</h3>
+            <p>As evidências contradizem a afirmação apresentada.</p>
+          </article>
+          <article class="verdict warn">
+            <h3>Inconclusiva</h3>
+            <p>As evidências disponíveis não permitem uma conclusão segura.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec alt" id="recursos">
+      <div class="wrap">
+        <div class="sec-head">
+          <span class="label">03 / Ferramentas</span>
+          <h2>Kit do investigador</h2>
+          <p class="sub">Recursos para analisar informações de forma crítica e responsável.</p>
+        </div>
+
+        <div class="drawers">
+          <article class="drawer">
+            <span class="drawer-tab">Gaveta 01</span>
+            <ul>
+              <li>
+                <h3>Origem da informação</h3>
+                <p>Quem publicou? A autoria e a fonte podem ser verificadas?</p>
+              </li>
+              <li>
+                <h3>Data e contexto</h3>
+                <p>O conteúdo é atual? Foi retirado de seu contexto original?</p>
+              </li>
+            </ul>
+          </article>
+
+          <article class="drawer">
+            <span class="drawer-tab">Gaveta 02</span>
+            <ul>
+              <li>
+                <h3>Confirmação independente</h3>
+                <p>Outras fontes confiáveis relatam os mesmos fatos?</p>
+              </li>
+              <li>
+                <h3>Imagens e vídeos</h3>
+                <p>O material visual corresponde ao acontecimento descrito?</p>
+              </li>
+            </ul>
+          </article>
+
+          <article class="drawer">
+            <span class="drawer-tab">Gaveta 03</span>
+            <ul>
+              <li>
+                <h3>Raciocínio crítico</h3>
+                <p>Separe fatos comprovados de opiniões e interpretações.</p>
+              </li>
+              <li>
+                <h3>Compartilhamento responsável</h3>
+                <p>Não espalhe conteúdos duvidosos antes de verificá-los.</p>
+              </li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec" id="casos">
+      <div class="wrap">
+        <div class="sec-head">
+          <span class="label">04 / Arquivo de casos</span>
+          <h2>Abra uma investigação</h2>
+          <p class="sub">Escolha um caso para acessar a área de análise e registrar seu veredito.</p>
+        </div>
+
+        <div class="case-gallery" aria-label="Seleção de casos">
+          <button class="case-cover is-active" type="button" data-case="0">
+            <img src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=600&q=80" alt="" loading="lazy">
+            <span>Arquivo 001</span>
+            <b>Notícia</b>
+          </button>
+          <button class="case-cover" type="button" data-case="1">
+            <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=600&q=80" alt="" loading="lazy">
+            <span>Arquivo 002</span>
+            <b>Internet</b>
+          </button>
+          <button class="case-cover" type="button" data-case="2">
+            <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=600&q=80" alt="" loading="lazy">
+            <span>Arquivo 003</span>
+            <b>Tecnologia</b>
+          </button>
+          <button class="case-cover" type="button" data-case="3">
+            <img src="https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&w=600&q=80" alt="" loading="lazy">
+            <span>Arquivo 004</span>
+            <b>Sociedade</b>
+          </button>
+          <button class="case-cover" type="button" data-case="4">
+            <img src="https://images.unsplash.com/photo-1523726491678-bf852e717f6a?auto=format&fit=crop&w=600&q=80" alt="" loading="lazy">
+            <span>Arquivo 005</span>
+            <b>Verificação</b>
+          </button>
+        </div>
+
+        <div class="case-brief">
+          <div>
+            <span class="label">Sua missão</span>
+            <h3>Investigue as evidências</h3>
+            <p>Leia o caso selecionado, compare as pistas e escolha o veredito que melhor corresponde às evidências.</p>
+          </div>
+          <div>
+            <div class="notice">
+              <strong>Atenção, detetive:</strong> imagens ilustrativas não comprovam uma notícia. Verifique sempre a fonte original e o contexto.
+            </div>
+          </div>
+        </div>
+
+        <div class="bench">
+          <div class="bench-main">
+            <section class="panel" id="case" aria-live="polite">
+              <div class="case-h">
+                <span class="chip" id="case-number">Arquivo 001</span>
+                <h3 id="case-title">A notícia em análise</h3>
+              </div>
+
+              <div class="claim">
+                <p id="case-claim">Uma afirmação circula na internet e precisa ser verificada.</p>
+                <p class="ctx" id="case-context">Analise a origem, a data e as evidências antes de tomar uma decisão.</p>
+              </div>
+
+              <h4 class="sub-h">Pistas disponíveis</h4>
+              <div class="clues" id="clues">
+                <article class="clue">
+                  <header><span class="pn">01</span><span class="tag oth">Verificar</span></header>
+                  <p class="meta">ORIGEM</p>
+                  <p class="txt">Procure a publicação original e confirme quem é responsável pelo conteúdo.</p>
+                </article>
+                <article class="clue">
+                  <header><span class="pn">02</span><span class="tag oth">Verificar</span></header>
+                  <p class="meta">CONFIRMAÇÃO</p>
+                  <p class="txt">Compare a afirmação com fontes independentes e confiáveis.</p>
+                </article>
+              </div>
+
+              <form id="investigation-form">
+                <fieldset class="seg">
+                  <legend>Qual é o seu veredito?</legend>
+                  <div class="seg-row">
+                    <div class="opt v-ok">
+                      <input type="radio" name="veredito" id="v-verdadeira" value="verdadeira" required>
+                      <label for="v-verdadeira">Verdadeira</label>
+                    </div>
+                    <div class="opt v-bad">
+                      <input type="radio" name="veredito" id="v-falsa" value="falsa">
+                      <label for="v-falsa">Falsa</label>
+                    </div>
+                    <div class="opt v-warn">
+                      <input type="radio" name="veredito" id="v-inconclusiva" value="inconclusiva">
+                      <label for="v-inconclusiva">Inconclusiva</label>
+                    </div>
+                  </div>
+                </fieldset>
+
+                <div class="field">
+                  <label for="justificativa">Justifique sua conclusão</label>
+                  <textarea id="justificativa" name="justificativa" placeholder="Quais pistas sustentam seu veredito?" required></textarea>
+                  <p class="hint">Explique o que você verificou e por que as evidências sustentam sua resposta.</p>
+                </div>
+
+                <button class="btn primary" type="submit">Registrar veredito</button>
+              </form>
+
+              <div class="result" id="result" hidden aria-live="polite">
+                <h4 id="result-title">Resultado da investigação</h4>
+                <p id="result-text"></p>
+              </div>
+            </section>
+
+            <section class="panel report" id="report">
+              <div class="report-top">
+                <h3>Relatório do caso</h3>
+                <button class="btn sm" id="copy-report" type="button">Copiar relatório</button>
+              </div>
+              <div id="report-body">
+                <p>Seu relatório será exibido aqui depois que você registrar o veredito.</p>
+              </div>
+              <p id="copy-status" role="status" aria-live="polite"></p>
+              <textarea id="copy-fallback" hidden aria-label="Texto do relatório para copiar"></textarea>
+            </section>
+          </div>
+
+          <aside class="bench-side">
+            <section class="panel">
+              <h3 class="side-h">Placar do squad</h3>
+              <div class="meters">
+                <div>
+                  <div class="m-top"><span>Casos analisados</span><b id="cases-count">0</b></div>
+                  <div class="bar-track"><i id="cases-meter" style="--w:0%;width:0%"></i></div>
+                </div>
+                <div>
+                  <div class="m-top"><span>Relatórios</span><b id="reports-count">0</b></div>
+                  <div class="bar-track"><i id="reports-meter" style="--w:0%;width:0%"></i></div>
+                </div>
+              </div>
+              <div class="total">
+                <span>Pontuação</span>
+                <b id="total-score">0</b>
+                <small>PTS</small>
+              </div>
+            </section>
+
+            <section class="panel">
+              <h3 class="side-h">Checklist</h3>
+              <ul class="check" id="checklist">
+                <li id="check-source">Verificar a fonte original</li>
+                <li id="check-date">Conferir data e contexto</li>
+                <li id="check-evidence">Comparar evidências</li>
+                <li id="check-report">Registrar a conclusão</li>
+              </ul>
+            </section>
+          </aside>
+        </div>
+
+        <p class="grand" id="grand">ARQUIVO DE INVESTIGAÇÃO • ANALISE ANTES DE COMPARTILHAR</p>
+      </div>
+    </section>
+
+    <section class="sec alt" id="ranking">
+      <div class="wrap">
+        <div class="sec-head">
+          <span class="label">05 / Placar</span>
+          <h2>Ranking dos detetives</h2>
+          <p class="sub">O desempenho deve refletir a qualidade da investigação, não apenas a velocidade.</p>
+        </div>
+
+        <div class="rank-grid">
+          <div class="tablewrap">
+            <table class="rank">
+              <thead>
+                <tr><th>Pos.</th><th>Squad</th><th>Pontos</th><th>Casos</th></tr>
+              </thead>
+              <tbody id="rank-body">
+                <tr class="first">
+                  <td class="pos">01</td>
+                  <td class="nm">Investigador iniciante</td>
+                  <td class="pts"><span id="ranking-score">0 pts</span><i style="--w:0%"></i></td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="rank-footer">
+              <p class="note" id="ranking-status" role="status" aria-live="polite">Carregando placar do Supabase...</p>
+              <button class="btn rank-refresh" id="refresh-ranking" type="button">Atualizar placar</button>
+            </div>
+          </div>
+
+          <div class="medals">
+            <article class="medal">
+              <svg viewBox="0 0 64 76" role="img" aria-label="Medalha de ouro">
+                <path class="m-rib1" d="M13 3h17l8 34H21z"/>
+                <path class="m-rib2" d="M34 3h17L42 37H26z"/>
+                <circle class="m-gold" cx="32" cy="47" r="20"/>
+                <circle class="m-ring" cx="32" cy="47" r="15"/>
+                <path class="m-glyph" d="M32 34l4 8 9 1-7 6 2 9-8-5-8 5 2-9-7-6 9-1z"/>
+              </svg>
+              <div><h3>Ouro</h3><p>Investigações consistentes, com atenção às evidências.</p></div>
+            </article>
+            <article class="medal">
+              <svg viewBox="0 0 64 76" role="img" aria-label="Medalha de prata">
+                <path class="m-rib1" d="M13 3h17l8 34H21z"/>
+                <path class="m-rib2" d="M34 3h17L42 37H26z"/>
+                <circle cx="32" cy="47" r="20" fill="#B7C4C9"/>
+                <circle class="m-ring" cx="32" cy="47" r="15"/>
+                <path class="m-glyph" d="M32 34l4 8 9 1-7 6 2 9-8-5-8 5 2-9-7-6 9-1z"/>
+              </svg>
+              <div><h3>Prata</h3><p>Boas análises com espaço para aprofundar as fontes.</p></div>
+            </article>
+            <article class="medal">
+              <svg viewBox="0 0 64 76" role="img" aria-label="Medalha de bronze">
+                <path class="m-rib1" d="M13 3h17l8 34H21z"/>
+                <path class="m-rib2" d="M34 3h17L42 37H26z"/>
+                <circle cx="32" cy="47" r="20" fill="#C88B62"/>
+                <circle class="m-ring" cx="32" cy="47" r="15"/>
+                <path class="m-glyph" d="M32 34l4 8 9 1-7 6 2 9-8-5-8 5 2-9-7-6 9-1z"/>
+              </svg>
+              <div><h3>Bronze</h3><p>O primeiro passo para desenvolver o olhar investigativo.</p></div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="band" id="diferencial">
+      <div class="wrap band-grid">
+        <div>
+          <span class="label">O diferencial</span>
+          <h2>Não basta <em>acreditar.</em><br>É preciso provar.</h2>
+          <p>O objetivo é transformar a curiosidade em método: investigar, comparar e concluir com responsabilidade.</p>
+          <span class="stamp">Caso em andamento</span>
+        </div>
+
+        <div class="formula">
+          <div><b>01</b><span>Questione</span></div>
+          <div><b>02</b><span>Investigue</span></div>
+          <div><b>03</b><span>Verifique</span></div>
+          <div><b>04</b><span>Conclua</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec" id="objetivo">
+      <div class="wrap goal">
+        <span class="label">Nosso objetivo</span>
+        <h2>Informação também exige responsabilidade.</h2>
+        <blockquote>
+          “Na dúvida, <mark>não compartilhe.</mark> Investigue a origem, confira as evidências e pense nas consequências.”
+        </blockquote>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <div class="foot">
+        <a class="brand" href="#inicio">
+          <img class="brand-logo" src="./logo.png" alt="">
+          <span>Detetives da Informação</span>
+        </a>
+        <p>Investigue • Verifique • Compartilhe com responsabilidade</p>
+      </div>
+
+      <div class="team-footer">
+        <img id="footer-squad-logo" src="./logo-armagedom.png" alt="Logo do squad Armagedom" loading="lazy">
+        <div class="team-info">
+          <strong id="footer-squad-name">Squad</strong>
+          <span>Equipe de investigação</span>
+          <span id="footer-squad-class">Turma</span>
+          <span id="footer-squad-participants">Participantes</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+<script type="module" src="./supabase.js?v=20261030-6"></script>
+<script type="module" src="./script.js?v=20261030-9"></script>
+</body>
+</html>
